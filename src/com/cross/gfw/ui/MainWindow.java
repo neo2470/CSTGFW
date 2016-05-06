@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Image;
 import java.awt.event.KeyEvent;
 
 import javax.swing.BorderFactory;
@@ -17,20 +18,21 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextPane;
 
+import com.cross.gfw.entity.Config;
 import com.cross.gfw.entity.Language;
-import com.cross.gfw.task.PullManifest;
-import com.cross.gfw.task.PullManifest.OnPullManifestListener;
+import com.cross.gfw.task.AsyncTask;
+import com.cross.gfw.task.BaseTask.onTaskExecuteListener;
 
-public class MainWindow extends BaseWindow implements OnPullManifestListener {
+public class MainWindow extends BaseWindow {
 
 	public MainWindow(Language language) {
 		this.language = language;
 		
-		PullManifest pullManifest = new PullManifest();
-		pullManifest.setOnPullManifestListener(this);
-		new Thread(pullManifest).start();
-		
 		initialize();
+		
+//		pullManifest();
+		
+		pullHostsLine();
 	}
 	
 	private void initialize() {
@@ -46,7 +48,9 @@ public class MainWindow extends BaseWindow implements OnPullManifestListener {
         hint.setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 0));
         topPanel.add(hint);
 
-        ImageIcon icon = new ImageIcon("res/images/java.png");
+        ImageIcon temp = new ImageIcon("res/images/java.png");
+        Image image = temp.getImage().getScaledInstance(50, 94, Image.SCALE_SMOOTH);
+        ImageIcon icon = new ImageIcon(image);
         
         JLabel label = new JLabel(icon);
         label.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -63,6 +67,10 @@ public class MainWindow extends BaseWindow implements OnPullManifestListener {
         mTextPane = new JTextPane();
         mTextPane.setContentType("text/html");
         mTextPane.setEditable(false);
+        mTextPane.setText(
+        		"<p style=\"text-align:center;\">版本：1.0</p>" +
+        		"<p style=\"text-align:center;\">日期：20160425</p>"
+        		);
         
         JScrollPane scrollPane = new JScrollPane(mTextPane);
         scrollPane.setBorder(BorderFactory.createEmptyBorder(15, 25, 15, 25));
@@ -85,14 +93,54 @@ public class MainWindow extends BaseWindow implements OnPullManifestListener {
         setLocationRelativeTo(null);
 	}
 	
-	@Override
-	public void onPreExecute() {
-		System.out.println("Start Pull manifest file");
+	private void pullManifest() {
+		AsyncTask pullManifest = new AsyncTask(Config.MANIFEST_URL);
+		pullManifest.setOnTaskExecuteListener(new onTaskExecuteListener<String>() {
+			
+			@Override
+			public void onPreExecute() {
+				System.out.println("Start Pull manifest file");
+			}
+			
+			@Override
+			public void onConnectError() {
+				System.out.println("Internet is not OK!");
+			}
+			
+			@Override
+			public void onReadLine(String line) {}
+			
+			@Override
+			public void onPostExecute(String data) {
+				System.out.println(data);
+			}
+		});
+		pullManifest.start();
 	}
 	
-	@Override
-	public void onPostExecute(String data) {
-		System.out.println(data);
+	private void pullHostsLine() {
+		AsyncTask pullHostLine = new AsyncTask(Config.HOSTS_URL);
+		pullHostLine.setOnTaskExecuteListener(new onTaskExecuteListener<String>() {
+
+			@Override
+			public void onPreExecute() {
+				System.out.println("Start Download hosts");
+			}
+
+			@Override
+			public void onConnectError() {}
+
+			@Override
+			public void onReadLine(String line) {
+				System.out.println(line);
+			}
+
+			@Override
+			public void onPostExecute(String result) {
+//				mTextPane.setText(result);
+			}
+		});
+		pullHostLine.start();
 	}
 	
 	private JTextPane mTextPane;

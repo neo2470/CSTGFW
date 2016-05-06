@@ -6,7 +6,7 @@ import com.cross.gfw.entity.Language;
 import com.cross.gfw.entity.LanguageCN;
 import com.cross.gfw.ui.MainWindow;
 
-public class Entrance{
+public class Entrance {
 	
 	public static void main(String[] args) {
 		buildApplication();
@@ -16,7 +16,6 @@ public class Entrance{
 	private static void buildApplication() {
 		
 		SwingUtilities.invokeLater(new Runnable() {
-			
 			@Override
 			public void run() {
 				
