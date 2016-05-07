@@ -1,26 +1,22 @@
 package com.cross.gfw.entity;
 
 public class Language {
-	
-	public String getMainWindowTitle() {
-		return mainWindowTitle;
-	}
 
-	public String getBtnCheck2UpdateText() {
-		return btnCheck2UpdateText;
-	}
-	
-	public String getBtnUpdateText() {
-		return btnUpdateText;
-	}
-	
-	public String getBtnUpdatingText() {
-		return btnUpdatingText;
-	}
+	public String mainWindowTitle;// title of the window
+	public String mainTopicText;
 
-	protected String mainWindowTitle;// title of the window
+	public String btnCheck2Update;// check to update btn text
+	public String btnUpdate;// update btn text
+	public String btnUpdating;// updating btn text
+	public String btnRepleaceHost;
+	public String btnFinish;
+	public String btnOk;
 	
-	protected String btnCheck2UpdateText;// check to update btn text
-	protected String btnUpdateText;// update btn text
-	protected String btnUpdatingText;// updating btn text
+	public String versionNameStr;// version name
+	public String updateDateStr;// the time of latest update
+	
+	public String foundNewVerStr;// find new version to update
+	public String notFoundNewVerStr;
+	
+	public String typeInGrantStr;
 }
